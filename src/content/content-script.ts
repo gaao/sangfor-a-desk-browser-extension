@@ -49,7 +49,6 @@ if (checkboxWrapper && checkboxWrapper.parentNode) {
   remberLoginBtn.style.cursor = 'pointer';
   // 插入到 checkboxWrapper 的后面，而不是作为其子元素
   checkboxWrapper.parentNode.insertBefore(remberLoginBtn, checkboxWrapper.nextSibling);
- 
   // 从缓存中获取用户名和密码
   chrome.storage.sync.get(['username', 'password'], (result) => {
     if (result.username && result.password) {
@@ -60,10 +59,21 @@ if (checkboxWrapper && checkboxWrapper.parentNode) {
       if (pageUserPwd) {
         pageUserPwd.value = result.password;
       }
+      if (result.username && result.password) {
+        // 登录按钮聚焦 //目前这个没生效应该是和默认输入框聚焦冲突了
+        if (loginButton) {
+          loginButton.focus();
+        }
+        // 隐藏插件按钮
+        remberLoginBtn.style.display = 'none';
+      }
       console.log('缓存中获取用户名和密码', result.username, result.password);
     }
   });
-
+  // 当密码输入框聚焦时，才显示插件按钮
+  pageUserPwd.addEventListener('focus', () => {
+    remberLoginBtn.style.display = 'block';
+  });
   // 给按钮添加点击事件
   remberLoginBtn.addEventListener('click', (event) => {
     // 阻止默认事件

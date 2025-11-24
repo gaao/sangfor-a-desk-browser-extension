@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "sangfor-a-deak-browser-extension",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "由于登录页面不支持记住密码故本插件来解决快捷登录",
   "action": {
     "default_icon": "logo/icon38_gray.png",

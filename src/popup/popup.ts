@@ -25,8 +25,8 @@ const resetDataButton = document.getElementById('resetData')
 
 // 从扩展存储读取数据
 function getFromStorage(key: any, callback: (arg0: any) => void) {
-  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
-    chrome.storage.sync.get([key], function (result) {
+  if (typeof (window as any).chrome !== 'undefined' && (window as any).chrome.storage && (window as any).chrome.storage.sync) {
+    (window as any).chrome.storage.sync.get([key], function (result: { [key: string]: any }) {
       callback(result[key]);
     });
   } else {
@@ -81,9 +81,9 @@ if (loginHandler) {
       getFromStorage('password', (password) => {
         if (username && password) {
           // 发送消息到content script
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          (window as any).chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any[]) => {
             console.log('tabs', tabs);
-            chrome.tabs.sendMessage(
+            (window as any).chrome.tabs.sendMessage(
               tabs[0].id!,
               { action: 'callContentScriptFunctionInitLogin', data: { username, password } },
             )
@@ -112,8 +112,8 @@ if (loginFormButton) {
       return
     }
     // 保存用户名和密码到扩展存储
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
-      chrome.storage.sync.set({ username: username, password: password }, function () {
+    if (typeof (window as any).chrome !== 'undefined' && (window as any).chrome.storage && (window as any).chrome.storage.sync) {
+      (window as any).chrome.storage.sync.set({ username: username, password: password }, function () {
         console.log('数据已保存:', ['username', 'password'], [username, password]);
       });
     } else {
@@ -123,9 +123,9 @@ if (loginFormButton) {
     // 关闭弹窗
     // window.close();
     // 发送消息到content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    (window as any).chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any[]) => {
       console.log('tabs', tabs);
-      chrome.tabs.sendMessage(
+      (window as any).chrome.tabs.sendMessage(
         tabs[0].id!,
         { action: 'callContentScriptFunctionInitLogin', data: { username, password } },
       )
@@ -143,12 +143,14 @@ if (resetDataButton) {
       return
     }
     // 清除存储数据
-    chrome.storage.sync.remove(['username', 'password'], function () {
-      console.log('登录信息已重置');
-      // 刷新当前页面
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.reload(tabs[0].id!);
+    if (typeof (window as any).chrome !== 'undefined' && (window as any).chrome.storage && (window as any).chrome.storage.sync) {
+      (window as any).chrome.storage.sync.remove(['username', 'password'], function () {
+        console.log('登录信息已重置');
+        // 刷新当前页面
+        (window as any).chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any[]) => {
+          (window as any).chrome.tabs.reload(tabs[0].id!);
+        });
       });
-    });
+    };
   })
 }

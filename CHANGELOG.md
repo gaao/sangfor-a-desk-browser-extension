@@ -2,9 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 ↓ 从这里插入新记录 ↓
+## 0.2.1 (2025-11-24)
+ 
+- 优化按钮展示时机
+
 ## 0.2.0 (2025-10-22)
 
-- 更新package.json版本号至0.2.0
+- 添加页面记住密码按钮
 - 重构popup界面，添加版本显示和说明文字
 - 修改存储方式从chrome.storage.local改为chrome.storage.sync
 
